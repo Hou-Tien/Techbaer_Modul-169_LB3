@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: techbaer_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: techbaer_db
+      MYSQL_USER: techbaer_user
+      MYSQL_PASSWORD: techbaer_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  auth:
+    build: ../auth
+    container_name: techbaer_auth
+    ports:
+      - "5000:5000"
+
+  frontend:
+    build: ../frontend
+    container_name: techbaer_frontend
+    ports:
+      - "3000:3000"
+    environment:
+      REACT_APP_API_URL: http://localhost:5000
+
+volumes:
+  db_data:
